@@ -20,9 +20,21 @@ public class MenuScreen implements Screen {
 
     private OrthographicCamera camera;
     private FitViewport viewport;
+    float red;
+    float blue;
+    float green;
+    int rsign = 1;
+    int bsign = 1;
+    int gsign = 1;
 
     public MenuScreen(BattleGame game) {
+        this.red = 0;
+        this.blue = 0;
+        this.green = 0;
         this.game = game;
+        rsign = 1;
+        bsign = 1;
+        gsign = 1;
     }
 
 
@@ -44,7 +56,7 @@ public class MenuScreen implements Screen {
 
         renderer.setProjectionMatrix(camera.combined);
         renderer.begin(ShapeType.Filled);
-        renderer.setColor(Color.BLUE);
+        renderer.setColor(Color.BLACK);
         Vector2 center = new Vector2(Values.WORLD_WIDTH / 2,
                 Values.WORLD_HEIGHT / 2);
         int x = Gdx.input.getX();
@@ -52,9 +64,34 @@ public class MenuScreen implements Screen {
         //translate into world units
         Vector2 pos = viewport.unproject(new Vector2(x, y));
         boolean over = pos.dst(center) <= Values.MENU_CIRCLE_RADIUS;
-
-        if (over)
-            renderer.setColor(Color.ORANGE);
+        if (over) {//set color to changing
+            switch ((int) (Math.random() * 3)) {
+                case 0:
+                    red += rsign * 0.01;
+                    break;
+                case 1:
+                    blue += bsign * 0.01;
+                    break;
+                default:
+                    green += gsign * 0.01;
+                    break;
+            }
+            //too high check
+            if (red > 0.9)
+                rsign = -1;
+            if (green > 0.9)
+                gsign = -1;
+            if (blue > 0.9)
+                bsign = -1;
+            //too low check
+            if (red < 0.1)
+                rsign = 1;
+            if (green < 0.1)
+                gsign = 1;
+            if (blue < 0.1)
+                bsign = 1;
+            renderer.setColor(red, green, blue, (float) Math.random());
+        }
         renderer.circle(center.x, center.y, Values.MENU_CIRCLE_RADIUS);
         renderer.end();
 
@@ -63,12 +100,11 @@ public class MenuScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         String titleText = "SUPER ULTRA FIGHTER X";
         GlyphLayout layout = new GlyphLayout(font, titleText);
-        font.draw(batch,titleText ,
+        font.draw(batch, titleText,
                 Values.WORLD_WIDTH / 2 - layout.width / 2,
                 Values.WORLD_HEIGHT / 2 + layout.height / 2);
         batch.end();
         if (over) {
-            renderer.setColor(Color.ORANGE);
             if (Gdx.input.justTouched()) {
                 game.setScreen(new TopDownScreen(game));
                 //System.out.println("hi");

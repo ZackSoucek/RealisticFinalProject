@@ -1,24 +1,61 @@
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class BattleGame extends Game {
-
+    public SpriteBatch batch;
+    public BitmapFont font;
+    public PlayerCharacter playerCharacter;
+    private int score;
     private int highScore;
 
-    public BattleGame(int highScore) {
-        super();
+
+
+    public BattleGame(int highScore){
         this.highScore = highScore;
     }
-
-    public int getHighScore() {
-        return highScore;
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+        playerCharacter = new PlayerCharacter(new Texture(Gdx.files.internal("FlabioFinal.png")));
+        score = 0;
+        this.setScreen(new MenuScreen(this));
     }
-    public void  score(int newScore){
-        if(newScore> highScore){
-            highScore = newScore;
+
+
+    @Override
+    public void render() {
+        super.render();//calls game's render, which i think call s the screen refreshes
+    }
+
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        font.dispose();
+    }
+
+    public void gameOver(){
+        this.setScreen(new GameOverScreen(this));
+    }
+
+    public int getScore() {
+        calculateScore();
+        return score;
+    }
+    public void calculateScore(){
+        score = playerCharacter.getXp();
+        for (int l = playerCharacter.getLevel(); l > 0; l--) {
+            score+= playerCharacter.EXP_PER_LEVEL * l;
         }
     }
 
-    public void create() {
-        setScreen(new MenuScreen(this));
+
+    public void setScore(int newScore){
+        score = newScore;
     }
+
 }
