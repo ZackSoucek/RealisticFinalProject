@@ -22,7 +22,7 @@ public abstract class AliveThing extends Entity implements CanAttack {
         this.weapon = weapon;
     }
     public void takeDamage(int damage){
-        this.health-=(damage> this.armor? damage-this.armor : 0);
+        this.health-=(damage > this.armor? damage-this.armor : 1);
     }
 
     @Override
@@ -30,8 +30,5 @@ public abstract class AliveThing extends Entity implements CanAttack {
         target.takeDamage(this.weapon.damage);
     }
 
-    @Override
-    public void attack(boolean left) {
-        //TODO swing weapon towards where facing
-    }
+
 }

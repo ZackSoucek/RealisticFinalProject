@@ -28,4 +28,6 @@ public abstract class Enemy extends AliveThing {
     public float getMoveSpeed() {
         return moveSpeed;
     }
+
+
 }

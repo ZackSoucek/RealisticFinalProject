@@ -23,9 +23,9 @@ public class MenuScreen implements Screen {
     float red;
     float blue;
     float green;
-    int rsign = 1;
-    int bsign = 1;
-    int gsign = 1;
+    int rsign;
+    int bsign;
+    int gsign;
 
     public MenuScreen(BattleGame game) {
         this.red = 0;
@@ -98,7 +98,7 @@ public class MenuScreen implements Screen {
 
         batch.begin();
         batch.setProjectionMatrix(camera.combined);
-        String titleText = "SUPER ULTRA FIGHTER X";
+        String titleText = "SUPER ULTRA FIGHTER X" + "\nHighscore = "+ game.getHighScore();
         GlyphLayout layout = new GlyphLayout(font, titleText);
         font.draw(batch, titleText,
                 Values.WORLD_WIDTH / 2 - layout.width / 2,
@@ -106,8 +106,8 @@ public class MenuScreen implements Screen {
         batch.end();
         if (over) {
             if (Gdx.input.justTouched()) {
+                game.setGameLevel(1);
                 game.setScreen(new TopDownScreen(game));
-                //System.out.println("hi");
             }
         }
 

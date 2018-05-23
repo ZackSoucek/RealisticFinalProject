@@ -11,7 +11,7 @@ public class EnemyGenerator {
      */
     public static ArrayList<Enemy> generate(int level, int xMin, int xMax, int yMin, int yMax) {
         ArrayList<Enemy> enemies = new ArrayList<>();
-        while (level <= 0) {
+        while (level > 0) {
             int diff = (int) (Math.random() * level + 1);
             int x = (int)(Math.random()*(xMax-xMin))+xMin;
             int y = (int)(Math.random()*(yMax-yMin))+yMin;
@@ -34,9 +34,9 @@ public class EnemyGenerator {
                 if (rand < 30) {
                     //return new thisTypeOfEnemy();
                 } else if (rand < 60) {
-                    //return new OtherTypeOfEnemy();
+                    return new Zombie(x,y,new Texture(Gdx.files.internal("zombie.png")));
                 } else {
-                    return new Zombie(x,y,new Texture(Gdx.files.internal("FlabioFinal.png")));
+                    return new Zombie(x,y,new Texture(Gdx.files.internal("zombie.png")));
                 }
                 break;
 

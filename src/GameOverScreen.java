@@ -2,7 +2,10 @@
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,6 +34,7 @@ public class GameOverScreen implements Screen {
         this.score = game.getScore();
 
     }
+
     @Override
     public void show() {
         renderer = new ShapeRenderer();
@@ -66,7 +70,7 @@ public class GameOverScreen implements Screen {
 
         batch.begin();
         batch.setProjectionMatrix(camera.combined);
-        String text = "Game over\nYou scored: "+ score + "\nCLick to try Again";
+        String text = "Game over\nYou scored: " + score + "\nCLick to try Again";
         GlyphLayout layout = new GlyphLayout(font, text);
         font.draw(batch, text,
                 Values.WORLD_WIDTH / 2 - layout.width / 2,
@@ -75,10 +79,17 @@ public class GameOverScreen implements Screen {
         if (over) {
             renderer.setColor(Color.ORANGE);
             if (Gdx.input.justTouched()) {
-                game.setScreen(new TopDownScreen(game));
-                //System.out.println("hi");
+                newGame(game.getHighScore());
             }
         }
+
+    }
+
+    private void newGame(int highScore) {
+        game.playerCharacter = new PlayerCharacter(new Texture("FlabioFinal.png"));
+        game.setGameLevel(0);
+        game.setScore(0);
+        game.setScreen(new MenuScreen(game));
 
     }
 
@@ -106,7 +117,9 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        font.dispose();
+        renderer.dispose();
     }
 
 

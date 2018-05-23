@@ -8,7 +8,7 @@ public class Values {
 
     public static final int SIZE = 20;
 
-    public static final float  SPEED = .1f;
+    public static final float  SPEED = 200f;
 
     public static final float MENU_CIRCLE_RADIUS = 150f;
 

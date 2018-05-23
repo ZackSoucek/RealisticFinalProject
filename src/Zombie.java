@@ -1,5 +1,8 @@
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import sun.awt.SunHints;
+
+import java.util.ArrayList;
 
 public class Zombie extends Enemy {
 
@@ -9,7 +12,7 @@ public class Zombie extends Enemy {
                 20,
                 20,
                 0,
-                new Weapon("Zombie Fists", 2, 3, 0.75),
+                new Weapon("Zombie Fists", 2, 1, 0.75),
                 1,
                 10f);
         this.sprite.setX(x);
@@ -17,9 +20,9 @@ public class Zombie extends Enemy {
     }
 
     @Override
-    public void think(BattleGame game) {
-//        float dxdt = this.sprite.getX()- game.playerCharacter.sprite.getX();
-//        this.sprite.translateX((dxdt < 0 ? this.getMoveSpeed() : dxdt > 0 ? -this.getMoveSpeed() : 0f));//todo make go towards the player.
+    public void think(BattleGame game, float delta, ArrayList<Entity> entities) {
+        this.sprite.translate(delta * Values.SPEED/5* (game.playerCharacter.sprite.getX() - this.sprite.getX() > 0 ? 1 : -1),
+                              delta * Values.SPEED/5* (game.playerCharacter.sprite.getY() - this.sprite.getY() > 0 ? 1 : -1));
     }
 
 }
