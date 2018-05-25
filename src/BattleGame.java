@@ -19,7 +19,7 @@ public class BattleGame extends Game {
         return level;
     }
 
-    public BattleGame(int highScore){
+    public BattleGame(int highScore) {
         this.highScore = highScore;
     }
 
@@ -45,7 +45,8 @@ public class BattleGame extends Game {
         font.dispose();
     }
 
-    public void gameOver(){
+    public void gameOver() {
+        calculateScore();
         this.setScreen(new GameOverScreen(this));
     }
 
@@ -62,16 +63,25 @@ public class BattleGame extends Game {
         this.level = level;
     }
 
-    public void calculateScore(){
+    public void calculateScore() {
         score = playerCharacter.getXp();
         for (int l = playerCharacter.getLevel(); l > 0; l--) {
-            score+= playerCharacter.EXP_PER_LEVEL * l;
+            score += playerCharacter.EXP_PER_LEVEL * l;
         }
+        if(score> highScore)
+            highScore = score;
     }
 
 
-    public void setScore(int newScore){
+    public void setScore(int newScore) {
         score = newScore;
+    }
+
+    public void winLevel() {
+        playerCharacter.addXP(level);
+        level++;
+        playerCharacter.health = playerCharacter.healthTotal;
+
     }
 
 }

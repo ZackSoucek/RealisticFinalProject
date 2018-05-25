@@ -73,7 +73,7 @@ public class PlayerCharacter extends AliveThing {
 
     @Override
     public void damage(AliveThing target) {
-        target.takeDamage(this.weapon.damage);
+        target.takeDamage(this.weapon.damage + this.level);//bandaid until new weapons availible
         if (target.health <= 0 && target instanceof Enemy) {
             addXP(((Enemy) target).getDifficulty()*3);
         }
@@ -125,7 +125,7 @@ public class PlayerCharacter extends AliveThing {
             attackRectangle = new Rectangle(charRect.x, charRect.y + charRect.height, charRect.width, this.weapon.reach);
             attacktexture = new Texture(Gdx.files.internal("UPAttack.png"));
         } else if (direction == Direction.DOWN) {
-            attackRectangle = new Rectangle(charRect.x, charRect.y - charRect.height - this.weapon.reach, charRect.width, this.weapon.reach);
+            attackRectangle = new Rectangle(charRect.x, charRect.y  - this.weapon.reach, charRect.width, this.weapon.reach);
             attacktexture = new Texture(Gdx.files.internal("DOWNAttack.png"));
         } else if (direction == Direction.LEFT) {
             attackRectangle = new Rectangle(charRect.x - charRect.width, charRect.y, this.weapon.reach, charRect.height);

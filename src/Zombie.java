@@ -14,15 +14,15 @@ public class Zombie extends Enemy {
                 0,
                 new Weapon("Zombie Fists", 2, 1, 0.75),
                 1,
-                10f);
+                20f);
         this.sprite.setX(x);
         this.sprite.setY(y);
     }
 
     @Override
     public void think(BattleGame game, float delta, ArrayList<Entity> entities) {
-        this.sprite.translate(delta * Values.SPEED/5* (game.playerCharacter.sprite.getX() - this.sprite.getX() > 0 ? 1 : -1),
-                              delta * Values.SPEED/5* (game.playerCharacter.sprite.getY() - this.sprite.getY() > 0 ? 1 : -1));
+        this.sprite.translate(delta * this.getMoveSpeed()* (game.playerCharacter.sprite.getX() - this.sprite.getX() > 0 ? 1 : -1),
+                              delta * this.getMoveSpeed()* (game.playerCharacter.sprite.getY() - this.sprite.getY() > 0 ? 1 : -1));
     }
 
 }

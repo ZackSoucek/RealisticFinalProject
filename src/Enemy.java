@@ -29,5 +29,7 @@ public abstract class Enemy extends AliveThing {
         return moveSpeed;
     }
 
-
+    public void setMoveSpeed(float moveSpeed) {
+        this.moveSpeed = moveSpeed;
+    }
 }

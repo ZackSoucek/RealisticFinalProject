@@ -1,13 +1,10 @@
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -17,6 +14,8 @@ public class TopDownScreen implements Screen {
     private BattleGame game;
     private ShapeRenderer renderer;
     private int score;
+    private boolean levelWon;
+    private boolean EXPGiven;
 
     private OrthographicCamera camera;
     private FitViewport viewport;
@@ -25,6 +24,8 @@ public class TopDownScreen implements Screen {
 
     public TopDownScreen(BattleGame game) {
         this.game = game;
+        levelWon = false;
+        EXPGiven = false;
     }
 
     @Override
@@ -72,7 +73,10 @@ public class TopDownScreen implements Screen {
 
     public void doThink(float delta) {
         if (entities.size() == 0) {
-            winLevel();
+            if (!levelWon){
+                levelWon = true;
+                EXPGiven = false;
+            }
         }
         game.playerCharacter.think(game, delta, entities);
         for (int i = 0; i < entities.size(); i++) {
@@ -86,9 +90,11 @@ public class TopDownScreen implements Screen {
     }
 
     private void winLevel() {
-        //todo stuf from beating the level
-        //exp, level goes up, heal, put up a win message, press any to contuniue(AFTER DELAY)
+        game.winLevel();
+        EXPGiven = true;
+
     }
+
 
     @Override
     public void render(float delta) {
@@ -114,7 +120,39 @@ public class TopDownScreen implements Screen {
         game.batch.end();
         drawHealthBar();
         drawEXP();
+        drawGameLevel();
 
+        if (levelWon){
+            game.batch.begin();
+            String titleText = "Level cleared! Score: "+ game.getScore()+ "\nPress Space to go to the next level";
+            GlyphLayout layout = new GlyphLayout(game.font, titleText);
+            game.font.draw(game.batch, titleText,
+                    Values.WORLD_WIDTH / 2 - layout.width / 2,
+                    Values.WORLD_HEIGHT / 2 + layout.height / 2);
+            game.batch.end();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){//start next level
+                winLevel();
+                entities.addAll(EnemyGenerator.generate(game.getLevel(),
+                        Values.WORLD_WIDTH / 10,
+                        Values.WORLD_WIDTH - Values.WORLD_WIDTH / 10,
+                        Values.WORLD_HEIGHT / 10,
+                        Values.WORLD_HEIGHT - Values.WORLD_HEIGHT / 10));
+                levelWon = false;
+                game.playerCharacter.sprite.setPosition(0,0);
+            }
+
+        }
+
+    }
+
+    private void drawGameLevel(){
+        game.batch.begin();
+        String titleText = "Level: " + game.getLevel() + "\nScore: "+ game.getScore() + "\nHigh score: "+ game.getHighScore();
+        GlyphLayout layout = new GlyphLayout(game.font, titleText);
+        game.font.draw(game.batch, titleText,
+                10,
+                Values.WORLD_HEIGHT - 85);
+        game.batch.end();
     }
 
     private void drawHealthBar() {
@@ -125,10 +163,11 @@ public class TopDownScreen implements Screen {
         renderer.rect(2, Values.WORLD_HEIGHT - 38, game.playerCharacter.health, 36);
         renderer.end();
     }
-    private void drawEXP(){
+
+    private void drawEXP() {
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setColor(Color.WHITE);
-        renderer.rect(0, Values.WORLD_HEIGHT - 80, game.playerCharacter.getLevel()*game.playerCharacter.getEXP_PER_LEVEL() + 4, 40);
+        renderer.rect(0, Values.WORLD_HEIGHT - 80, game.playerCharacter.getLevel() * game.playerCharacter.getEXP_PER_LEVEL() + 4, 40);
         renderer.setColor(Color.YELLOW);
         renderer.rect(2, Values.WORLD_HEIGHT - 78, game.playerCharacter.getXp(), 36);
         renderer.end();

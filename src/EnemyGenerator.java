@@ -9,10 +9,13 @@ public class EnemyGenerator {
      * @return an array of enemies which add up to the difficulty for the level
      * this can be modifed to give diffeent ammounts of enemies of difficulties
      */
+
+
     public static ArrayList<Enemy> generate(int level, int xMin, int xMax, int yMin, int yMax) {
         ArrayList<Enemy> enemies = new ArrayList<>();
         while (level > 0) {
-            int diff = (int) (Math.random() * level + 1);
+            int diff = (int) (Math.random() *Math.min(level, Values.MAX_DIFFICULTY) + 1);
+
             int x = (int)(Math.random()*(xMax-xMin))+xMin;
             int y = (int)(Math.random()*(yMax-yMin))+yMin;
             enemies.add(enemyFinder(diff,x,y));
@@ -32,29 +35,26 @@ public class EnemyGenerator {
         switch (dificulty) {
             case 1:
                 if (rand < 30) {
-                    //return new thisTypeOfEnemy();
+                    return new Zombie(x,y,new Texture(Gdx.files.internal("zombie.png")));
                 } else if (rand < 60) {
                     return new Zombie(x,y,new Texture(Gdx.files.internal("zombie.png")));
                 } else {
                     return new Zombie(x,y,new Texture(Gdx.files.internal("zombie.png")));
                 }
-                break;
-
             case 2:
                 if (rand < 30) {
-                    //return new thisTypeOfEnemy();
+                    return new Zombear(x,y,new Texture(Gdx.files.internal("Zombear.png")));
                 } else if (rand < 60) {
-                    //return new OtherTypeOfEnemy();
+                    return new Zombear(x,y,new Texture(Gdx.files.internal("Zombear.png")));
                 } else {
-                    //return new NormalEnemy();
+                    return new Zombear(x,y,new Texture(Gdx.files.internal("Zombear.png")));
                 }
-                break;
+
 
             default:
-                //return new DefaultEnemy(diff);
+                return new Zombie(x,y, new Texture(Gdx.files.internal("CroppedFloor.png")));
         }
-        //stub out
-        return new Zombie(x,y, new Texture(Gdx.files.internal("FlabioFinal.png")));
+
     }
 
 }
