@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import sun.awt.SunHints;
 
 import java.util.ArrayList;
 
@@ -73,21 +74,24 @@ public class TopDownScreen implements Screen {
 
     public void doThink(float delta) {
         if (entities.size() == 0) {
-            if (!levelWon){
+            if (!levelWon) {
                 levelWon = true;
                 EXPGiven = false;
             }
         }
         game.playerCharacter.think(game, delta, entities);
+        game.playerCharacter.checkPos();
         for (int i = 0; i < entities.size(); i++) {
             //for each entity in the level
             entities.get(i).think(game, delta, entities);//do their AI
+            entities.get(i).checkPos();
             if (entities.get(i) instanceof AliveThing && ((AliveThing) entities.get(i)).health <= 0) {
                 entities.remove(entities.get(i));
             }
             //TODO ememies push off of each other
         }
     }
+
 
     private void winLevel() {
         game.winLevel();
@@ -122,15 +126,15 @@ public class TopDownScreen implements Screen {
         drawEXP();
         drawGameLevel();
 
-        if (levelWon){
+        if (levelWon) {
             game.batch.begin();
-            String titleText = "Level cleared! Score: "+ game.getScore()+ "\nPress Space to go to the next level";
+            String titleText = "Level cleared! Score: " + game.getScore() + "\nPress Space to go to the next level";
             GlyphLayout layout = new GlyphLayout(game.font, titleText);
             game.font.draw(game.batch, titleText,
                     Values.WORLD_WIDTH / 2 - layout.width / 2,
                     Values.WORLD_HEIGHT / 2 + layout.height / 2);
             game.batch.end();
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){//start next level
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {//start next level
                 winLevel();
                 entities.addAll(EnemyGenerator.generate(game.getLevel(),
                         Values.WORLD_WIDTH / 10,
@@ -138,16 +142,16 @@ public class TopDownScreen implements Screen {
                         Values.WORLD_HEIGHT / 10,
                         Values.WORLD_HEIGHT - Values.WORLD_HEIGHT / 10));
                 levelWon = false;
-                game.playerCharacter.sprite.setPosition(0,0);
+                game.playerCharacter.sprite.setPosition(0, 0);
             }
 
         }
 
     }
 
-    private void drawGameLevel(){
+    private void drawGameLevel() {
         game.batch.begin();
-        String titleText = "Level: " + game.getLevel() + "\nScore: "+ game.getScore() + "\nHigh score: "+ game.getHighScore();
+        String titleText = "Level: " + game.getLevel() + "\nScore: " + game.getScore() + "\nHigh score: " + game.getHighScore();
         GlyphLayout layout = new GlyphLayout(game.font, titleText);
         game.font.draw(game.batch, titleText,
                 10,
@@ -171,6 +175,10 @@ public class TopDownScreen implements Screen {
         renderer.setColor(Color.YELLOW);
         renderer.rect(2, Values.WORLD_HEIGHT - 78, game.playerCharacter.getXp(), 36);
         renderer.end();
+    }
+
+    public boolean addEntity(Entity e){
+       return entities.add(e);
     }
 
 

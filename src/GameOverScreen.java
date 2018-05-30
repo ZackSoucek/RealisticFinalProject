@@ -70,7 +70,7 @@ public class GameOverScreen implements Screen {
 
         batch.begin();
         batch.setProjectionMatrix(camera.combined);
-        String text = "Game over\nYou scored: " + score + "\nCLick to try Again";
+        String text = "Game over\nYou scored: " + score + "\nClick to try Again";
         GlyphLayout layout = new GlyphLayout(font, text);
         font.draw(batch, text,
                 Values.WORLD_WIDTH / 2 - layout.width / 2,

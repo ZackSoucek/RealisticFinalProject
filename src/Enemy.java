@@ -17,10 +17,12 @@ public abstract class Enemy extends AliveThing {
         this.moveSpeed = moveSpeed;
 
     }
+
     @Override
     public void collidePlayer(PlayerCharacter playerCharacter) {
         this.damage(playerCharacter);
     }
+
     public int getDifficulty() {
         return difficulty;
     }

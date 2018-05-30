@@ -73,7 +73,7 @@ public class PlayerCharacter extends AliveThing {
 
     @Override
     public void damage(AliveThing target) {
-        target.takeDamage(this.weapon.damage + this.level);//bandaid until new weapons availible
+        target.takeDamage(this.weapon.damage + this.level);//bandaid until new weapons available
         if (target.health <= 0 && target instanceof Enemy) {
             addXP(((Enemy) target).getDifficulty()*3);
         }

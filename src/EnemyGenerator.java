@@ -14,11 +14,11 @@ public class EnemyGenerator {
     public static ArrayList<Enemy> generate(int level, int xMin, int xMax, int yMin, int yMax) {
         ArrayList<Enemy> enemies = new ArrayList<>();
         while (level > 0) {
-            int diff = (int) (Math.random() *Math.min(level, Values.MAX_DIFFICULTY) + 1);
+            int diff = (int) (Math.random() * Math.min(level, Values.MAX_DIFFICULTY) + 1);
 
-            int x = (int)(Math.random()*(xMax-xMin))+xMin;
-            int y = (int)(Math.random()*(yMax-yMin))+yMin;
-            enemies.add(enemyFinder(diff,x,y));
+            int x = (int) (Math.random() * (xMax - xMin)) + xMin;
+            int y = (int) (Math.random() * (yMax - yMin)) + yMin;
+            enemies.add(enemyFinder(diff, x, y));
             level -= diff;
         }
         return enemies;
@@ -34,25 +34,13 @@ public class EnemyGenerator {
         int rand = (int) (Math.random() * 100);//random value from 0-99 for generation fo a random enemy in the difficulty value
         switch (dificulty) {
             case 1:
-                if (rand < 30) {
-                    return new Zombie(x,y,new Texture(Gdx.files.internal("zombie.png")));
-                } else if (rand < 60) {
-                    return new Zombie(x,y,new Texture(Gdx.files.internal("zombie.png")));
-                } else {
-                    return new Zombie(x,y,new Texture(Gdx.files.internal("zombie.png")));
-                }
+                return new Zombie(x, y, new Texture(Gdx.files.internal("zombie.png")));
             case 2:
-                if (rand < 30) {
-                    return new Zombear(x,y,new Texture(Gdx.files.internal("Zombear.png")));
-                } else if (rand < 60) {
-                    return new Zombear(x,y,new Texture(Gdx.files.internal("Zombear.png")));
-                } else {
-                    return new Zombear(x,y,new Texture(Gdx.files.internal("Zombear.png")));
-                }
-
-
+                return new Skeleton(x,y,new Texture(Gdx.files.internal("Skeleton.png")));
+            case 3:
+                return new Zombear(x, y, new Texture(Gdx.files.internal("Zombear.png")));
             default:
-                return new Zombie(x,y, new Texture(Gdx.files.internal("CroppedFloor.png")));
+                return new Zombie(x, y, new Texture(Gdx.files.internal("FlabioFinal")));
         }
 
     }

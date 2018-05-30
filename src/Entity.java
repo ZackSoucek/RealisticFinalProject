@@ -21,4 +21,15 @@ public abstract class Entity {
 
     public abstract void collidePlayer(PlayerCharacter playerCharacter);//run when player touches them
 
+    public void checkPos() {
+        if (this.sprite.getX() < 0)
+            this.sprite.setX(0);
+        if (this.sprite.getY() < 0)
+            this.sprite.setY(0);
+        if (this.sprite.getX() > Values.WORLD_WIDTH - this.sprite.getWidth())
+            this.sprite.setX(Values.WORLD_WIDTH - this.sprite.getWidth());
+        if (this.sprite.getY() > Values.WORLD_HEIGHT - this.sprite.getHeight())
+            this.sprite.setY(Values.WORLD_HEIGHT - this.sprite.getHeight());
+    }
+
 }
