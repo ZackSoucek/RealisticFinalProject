@@ -1,5 +1,6 @@
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
@@ -25,22 +26,23 @@ public class EnemyGenerator {
     }
 
     /**
-     * @param dificulty the diffuclty of ememy wanted
+     * @param dificulty the difficlty of ememy wanted
      * @return a randomly selected enemy from the specifies difficlty
      * @Precondition difficulty is a valid enemy difficulty
      */
     private static Enemy enemyFinder(int dificulty, int x, int y) {
+        Vector2 vect = new Vector2();
         //return an enemy that fits the given difficulty
         int rand = (int) (Math.random() * 100);//random value from 0-99 for generation fo a random enemy in the difficulty value
         switch (dificulty) {
             case 1:
-                return new Zombie(x, y, new Texture(Gdx.files.internal("zombie.png")));
+                return new Zombie(vect, x, y, new Texture(Gdx.files.internal("zombie.png")));
             case 2:
-                return new Skeleton(x,y,new Texture(Gdx.files.internal("Skeleton.png")));
+                return new Skeleton(vect, x, y, new Texture(Gdx.files.internal("Skeleton.png")));
             case 3:
-                return new Zombear(x, y, new Texture(Gdx.files.internal("Zombear.png")));
+                return new Zombear(vect, x, y, new Texture(Gdx.files.internal("Zombear.png")));
             default:
-                return new Zombie(x, y, new Texture(Gdx.files.internal("FlabioFinal")));
+                return new Zombie(vect, x, y, new Texture(Gdx.files.internal("FlabioFinal")));
         }
 
     }

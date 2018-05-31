@@ -1,4 +1,5 @@
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 
 public abstract class AliveThing extends Entity implements CanAttack {
     public int healthTotal;
@@ -14,8 +15,8 @@ public abstract class AliveThing extends Entity implements CanAttack {
         this.armor = 0;
     }
 
-    public AliveThing(Sprite sprite, int healthTotal, int health, int armor, Weapon weapon) {
-        super(sprite);
+    public AliveThing(Sprite sprite, Vector2 vector, int healthTotal, int health, int armor, Weapon weapon) {
+        super(sprite, vector);
         this.healthTotal = healthTotal;
         this.health = health;
         this.armor = armor;

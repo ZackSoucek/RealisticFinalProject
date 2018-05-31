@@ -3,6 +3,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.sun.javafx.scene.traversal.Direction;
 
 import java.awt.*;
@@ -17,6 +18,7 @@ public class PlayerCharacter extends AliveThing {
 
     public PlayerCharacter(Texture texture) {
         super(new Sprite(texture),
+                new Vector2(),
                 100,
                 100,
                 1,
@@ -96,18 +98,22 @@ public class PlayerCharacter extends AliveThing {
     public void think(BattleGame game, float delta, ArrayList<Entity> entities) {
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             game.playerCharacter.setDirection(Direction.DOWN);
+            sprite.setRotation(180);
             game.playerCharacter.sprite.translateY(-delta * Values.SPEED);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             game.playerCharacter.setDirection(Direction.LEFT);
+            sprite.setRotation(270);
             game.playerCharacter.sprite.translateX(-delta * Values.SPEED);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             game.playerCharacter.setDirection(Direction.RIGHT);
+            sprite.setRotation(90);
             game.playerCharacter.sprite.translateX(delta * Values.SPEED);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             game.playerCharacter.setDirection(Direction.UP);
+            sprite.setRotation(0);
             game.playerCharacter.sprite.translateY(delta * Values.SPEED);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {

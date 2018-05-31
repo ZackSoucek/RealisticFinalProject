@@ -1,20 +1,24 @@
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
 public abstract class Entity {
     public Sprite sprite;
+    public Vector2 vector;
     //all entitys need a sprite which has location and picture
 
 
     public Entity() {
         this.sprite = new Sprite(new Texture(Gdx.files.internal("assets/Flabio.png")));
+        vector = new Vector2();
     }
 
-    public Entity(Sprite sprite) {
+    public Entity(Sprite sprite, Vector2 vector) {
         this.sprite = sprite;
+        this.vector = vector;
     }
 
     public abstract void think(BattleGame game, float delta, ArrayList<Entity> entities);//should handle movement and such

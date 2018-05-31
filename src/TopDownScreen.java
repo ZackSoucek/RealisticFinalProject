@@ -88,7 +88,6 @@ public class TopDownScreen implements Screen {
             if (entities.get(i) instanceof AliveThing && ((AliveThing) entities.get(i)).health <= 0) {
                 entities.remove(entities.get(i));
             }
-            //TODO ememies push off of each other
         }
     }
 
@@ -177,8 +176,12 @@ public class TopDownScreen implements Screen {
         renderer.end();
     }
 
-    public boolean addEntity(Entity e){
-       return entities.add(e);
+    public boolean addEntity(Entity e) {
+        return entities.add(e);
+    }
+
+    public boolean removeEntity(Entity e) {
+        return this.entities.remove(e);
     }
 
 

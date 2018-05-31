@@ -1,4 +1,5 @@
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 
 public abstract class Enemy extends AliveThing {
     private int difficulty;
@@ -11,8 +12,8 @@ public abstract class Enemy extends AliveThing {
     }
 
 
-    public Enemy(Sprite sprite, int healthTotal, int health, int armor, Weapon weapon, int difficulty, float moveSpeed) {
-        super(sprite, healthTotal, health, armor, weapon);
+    public Enemy(Sprite sprite, Vector2 vector, int healthTotal, int health, int armor, Weapon weapon, int difficulty, float moveSpeed) {
+        super(sprite, vector, healthTotal, health, armor, weapon);
         this.difficulty = difficulty;
         this.moveSpeed = moveSpeed;
 
