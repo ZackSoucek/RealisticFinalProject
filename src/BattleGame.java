@@ -27,7 +27,7 @@ public class BattleGame extends Game {
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont();
-        playerCharacter = new PlayerCharacter(new Texture(Gdx.files.internal("FlabioFinal.png")));
+        playerCharacter = new PlayerCharacter(new Texture(Gdx.files.internal("SWING/Swing Top0000.png")));
         score = 0;
         level = 0;
         this.setScreen(new MenuScreen(this));

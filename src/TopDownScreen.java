@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import sun.awt.SunHints;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class TopDownScreen implements Screen {
@@ -47,6 +49,7 @@ public class TopDownScreen implements Screen {
 
 
         game.batch.end();
+
     }
 
     private void draw() {

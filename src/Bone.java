@@ -12,7 +12,7 @@ public class Bone extends AliveThing {
                 vector2,
                 40,
                 40,
-                5,
+                2,
                 new Weapon("Bone explosion", 30, 1, 0));
         this.sprite.setX(x);
         this.sprite.setY(y);

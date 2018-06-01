@@ -1,12 +1,14 @@
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
+
 import java.util.ArrayList;
 
 public class Skeleton extends Enemy {
-    private static long COOL_DOWN = 2000;
+    private static long COOL_DOWN = 1000;
     private long lastThrowTime;
 
     public Skeleton(Vector2 vector, int x, int y, Texture texture) {
@@ -17,7 +19,7 @@ public class Skeleton extends Enemy {
                 0,
                 new Weapon("Bone splinters", 3, 1, 0.75),
                 2,
-                20f);
+                3f);
         this.sprite.setX(x);
         this.sprite.setY(y);
         lastThrowTime = TimeUtils.millis();
@@ -25,8 +27,16 @@ public class Skeleton extends Enemy {
 
     @Override
     public void think(BattleGame game, float delta, ArrayList<Entity> entities) {
+        this.vector.set(game.playerCharacter.sprite.getX() - this.sprite.getX(),
+                game.playerCharacter.sprite.getY() - this.sprite.getY());
+        this.vector.setLength(this.getMoveSpeed());
 
-        if ( TimeUtils.timeSinceMillis(lastThrowTime) > COOL_DOWN && (int) (Math.random() * 100) == 0) {
+        this.sprite.setRotation(90-180f/(float)Math.PI*(float)(Math.atan2(this.vector.x, this.vector.y)));
+
+        this.sprite.translate(delta * this.vector.x,
+                delta * this.vector.y);
+
+        if (TimeUtils.timeSinceMillis(lastThrowTime) > COOL_DOWN && (int) (Math.random() * 100) == 0) {
             throwBone(game);
             lastThrowTime = TimeUtils.millis();
         }

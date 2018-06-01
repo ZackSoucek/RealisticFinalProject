@@ -86,7 +86,7 @@ public class GameOverScreen implements Screen {
     }
 
     private void newGame(int highScore) {
-        game.playerCharacter = new PlayerCharacter(new Texture("FlabioFinal.png"));
+        game.playerCharacter = new PlayerCharacter(new Texture("SWING/Swing Top0000.png"));
         game.setGameLevel(0);
         game.setScore(0);
         game.setScreen(new MenuScreen(game));

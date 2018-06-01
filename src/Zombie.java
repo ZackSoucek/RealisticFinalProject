@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Zombie extends Enemy {
 
 
-    public Zombie( Vector2 vector, int x, int y, Texture texture) {
+    public Zombie(Vector2 vector, int x, int y, Texture texture) {
         super(new Sprite(texture),
                 vector,
                 20,
@@ -23,8 +23,14 @@ public class Zombie extends Enemy {
 
     @Override
     public void think(BattleGame game, float delta, ArrayList<Entity> entities) {
-        this.sprite.translate(delta * this.getMoveSpeed()* (game.playerCharacter.sprite.getX() - this.sprite.getX() > 0 ? 1 : -1)+ this.vector.x,
-                              delta * this.getMoveSpeed()* (game.playerCharacter.sprite.getY() - this.sprite.getY() > 0 ? 1 : -1)+ this.vector.y);
+        this.vector.set(game.playerCharacter.sprite.getX() - this.sprite.getX(),
+                game.playerCharacter.sprite.getY() - this.sprite.getY());
+        this.vector.setLength(this.getMoveSpeed());
+
+        this.sprite.setRotation(90-180f/(float)Math.PI*(float)(Math.atan2(this.vector.x, this.vector.y)));
+
+        this.sprite.translate(delta * this.vector.x,
+                delta * this.vector.y);
     }
 
 }

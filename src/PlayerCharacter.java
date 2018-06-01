@@ -15,8 +15,10 @@ public class PlayerCharacter extends AliveThing {
     private int level;
     public final int EXP_PER_LEVEL = 10;
     private Direction direction;
+    private Rectangle hitbox;
 
     public PlayerCharacter(Texture texture) {
+
         super(new Sprite(texture),
                 new Vector2(),
                 100,
@@ -26,6 +28,12 @@ public class PlayerCharacter extends AliveThing {
         this.xp = 0;
         this.level = 1;
         direction = Direction.UP;
+        this.sprite.scale(1.0f);
+        hitbox = new Rectangle();
+        hitbox.x = sprite.getX() + sprite.getWidth() / 2 - 85 / 2;
+        hitbox.y = sprite.getY() + sprite.getHeight() / 2 - 85 / 2;
+        hitbox.width = 85;
+        hitbox.height = 85;
     }
 
     public Direction getDirection() {
@@ -75,50 +83,70 @@ public class PlayerCharacter extends AliveThing {
 
     @Override
     public void damage(AliveThing target) {
-        target.takeDamage(this.weapon.damage + this.level);//bandaid until new weapons available
+        target.takeDamage(this.weapon.damage + this.level);
         if (target.health <= 0 && target instanceof Enemy) {
-            addXP(((Enemy) target).getDifficulty()*3);
+            addXP(((Enemy) target).getDifficulty() * 3);
         }
     }
 
     public boolean isTouching(Entity e) {
-        return this.sprite.getBoundingRectangle().overlaps(e.sprite.getBoundingRectangle());
+        return hitbox.overlaps(e.sprite.getBoundingRectangle());
     }
 
     public boolean isDead() {
         return this.health <= 0;
     }
 
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+
     @Override
     public void collidePlayer(PlayerCharacter playerCharacter) {
         System.out.println("NO\nPLAYER DOES NOT NEED TO CHECK COLLISION WITH ITSELF\nNEVER RUN THIS");
         int i = 1 / 0;
+
     }
 
     public void think(BattleGame game, float delta, ArrayList<Entity> entities) {
+
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            game.playerCharacter.setDirection(Direction.DOWN);
-            sprite.setRotation(180);
-            game.playerCharacter.sprite.translateY(-delta * Values.SPEED);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            game.playerCharacter.setDirection(Direction.LEFT);
-            sprite.setRotation(270);
-            game.playerCharacter.sprite.translateX(-delta * Values.SPEED);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            game.playerCharacter.setDirection(Direction.RIGHT);
-            sprite.setRotation(90);
-            game.playerCharacter.sprite.translateX(delta * Values.SPEED);
+            this.vector.y = -Values.SPEED;
+            this.vector.x = 0;
+            this.direction = Direction.DOWN;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            game.playerCharacter.setDirection(Direction.UP);
-            sprite.setRotation(0);
-            game.playerCharacter.sprite.translateY(delta * Values.SPEED);
+            this.vector.y = Values.SPEED;
+            this.vector.x = 0;
+            this.direction = Direction.UP;
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            this.vector.x = -Values.SPEED;
+            this.vector.y = 0;
+            this.direction = Direction.LEFT;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            this.vector.x = Values.SPEED;
+            this.vector.y = 0;
+            this.direction = Direction.RIGHT;
+        }
+        this.vector.setLength(Values.SPEED);
+        if (!Gdx.input.isKeyPressed(Input.Keys.ANY_KEY) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            this.vector.setLength2(0.001f);
+        }
+
+        hitbox.setCenter(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
+
+        this.sprite.setRotation(180 - 180f / (float) Math.PI * (float) (Math.atan2(this.vector.x, this.vector.y)));
+
+        this.sprite.translate(delta * this.vector.x,
+                delta * this.vector.y);
+
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             this.attack(this.direction, entities, game);
         }
+        //TODO LEFT OFF HERE
 
 
     }
@@ -126,15 +154,16 @@ public class PlayerCharacter extends AliveThing {
     public void attack(Direction direction, ArrayList<Entity> entities, BattleGame game) {
         Rectangle attackRectangle;
         Texture attacktexture;
-        Rectangle charRect = sprite.getBoundingRectangle();
+        Rectangle charRect = hitbox;
+
         if (direction == Direction.UP) {
             attackRectangle = new Rectangle(charRect.x, charRect.y + charRect.height, charRect.width, this.weapon.reach);
             attacktexture = new Texture(Gdx.files.internal("UPAttack.png"));
         } else if (direction == Direction.DOWN) {
-            attackRectangle = new Rectangle(charRect.x, charRect.y  - this.weapon.reach, charRect.width, this.weapon.reach);
+            attackRectangle = new Rectangle(charRect.x, charRect.y - this.weapon.reach, charRect.width, this.weapon.reach);
             attacktexture = new Texture(Gdx.files.internal("DOWNAttack.png"));
         } else if (direction == Direction.LEFT) {
-            attackRectangle = new Rectangle(charRect.x - charRect.width, charRect.y, this.weapon.reach, charRect.height);
+            attackRectangle = new Rectangle(charRect.x - this.weapon.reach, charRect.y, this.weapon.reach, charRect.height);
             attacktexture = new Texture(Gdx.files.internal("LEFTAttack.png"));
         } else {//right
             attackRectangle = new Rectangle(charRect.x + charRect.width, charRect.y, this.weapon.reach, charRect.height);
@@ -150,5 +179,6 @@ public class PlayerCharacter extends AliveThing {
             }
 
         }
+        ;
     }
 }
