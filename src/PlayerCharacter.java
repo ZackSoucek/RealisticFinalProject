@@ -2,12 +2,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.sun.javafx.scene.traversal.Direction;
 
 import java.awt.*;
 import java.awt.image.DirectColorModel;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class PlayerCharacter extends AliveThing {
@@ -17,23 +20,48 @@ public class PlayerCharacter extends AliveThing {
     private Direction direction;
     private Rectangle hitbox;
 
-    public PlayerCharacter(Texture texture) {
+    //ANIMATION
+    private boolean attacking;
+    private short frame;
+    private Texture[] animArray;
 
+
+    public PlayerCharacter(Texture texture) {
         super(new Sprite(texture),
                 new Vector2(),
                 100,
                 100,
                 1,
-                new Weapon("Basic Sword", 5, 150, 1));
+                new Weapon("Basic Sword", 15, 150, 1));
         this.xp = 0;
         this.level = 1;
         direction = Direction.UP;
         this.sprite.scale(1.0f);
+        attacking = false;
+        frame = 0;
+        animArray = new Texture[33];
+        //Cancer but easy
+        for (int i = 0; i <= 32; i++) {
+            String path = "SWING/Swing Top00" + String.format("%02d", i) + ".png";
+            animArray[i] = new Texture(path);
+        }
         hitbox = new Rectangle();
-        hitbox.x = sprite.getX() + sprite.getWidth() / 2 - 85 / 2;
-        hitbox.y = sprite.getY() + sprite.getHeight() / 2 - 85 / 2;
-        hitbox.width = 85;
-        hitbox.height = 85;
+        hitbox.y = 35;
+        hitbox.x =  35;
+        hitbox.width = 57;
+        hitbox.height = 60;
+
+    }
+
+    public void animate() {
+        if (attacking) {
+            this.frame++;
+            if (frame >= 32) {
+                frame = 0;
+                attacking = false;
+            }
+            this.sprite.setTexture(animArray[frame]);
+        }
     }
 
     public Direction getDirection() {
@@ -76,10 +104,6 @@ public class PlayerCharacter extends AliveThing {
         return EXP_PER_LEVEL;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
 
     @Override
     public void damage(AliveThing target) {
@@ -109,6 +133,8 @@ public class PlayerCharacter extends AliveThing {
     }
 
     public void think(BattleGame game, float delta, ArrayList<Entity> entities) {
+        animate();
+
 
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             this.vector.y = -Values.SPEED;
@@ -135,8 +161,6 @@ public class PlayerCharacter extends AliveThing {
             this.vector.setLength2(0.001f);
         }
 
-        hitbox.setCenter(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
-
         this.sprite.setRotation(180 - 180f / (float) Math.PI * (float) (Math.atan2(this.vector.x, this.vector.y)));
 
         this.sprite.translate(delta * this.vector.x,
@@ -144,34 +168,33 @@ public class PlayerCharacter extends AliveThing {
 
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            this.attack(this.direction, entities, game);
+            if (!attacking) {
+                attacking = true;
+                this.attack(this.direction, entities, game);
+            }
         }
-        //TODO LEFT OFF HERE
 
 
     }
 
     public void attack(Direction direction, ArrayList<Entity> entities, BattleGame game) {
         Rectangle attackRectangle;
-        Texture attacktexture;
+        //Texture attacktexture;
         Rectangle charRect = hitbox;
 
         if (direction == Direction.UP) {
             attackRectangle = new Rectangle(charRect.x, charRect.y + charRect.height, charRect.width, this.weapon.reach);
-            attacktexture = new Texture(Gdx.files.internal("UPAttack.png"));
+            // attacktexture = new Texture(Gdx.files.internal("UPAttack.png"));
         } else if (direction == Direction.DOWN) {
             attackRectangle = new Rectangle(charRect.x, charRect.y - this.weapon.reach, charRect.width, this.weapon.reach);
-            attacktexture = new Texture(Gdx.files.internal("DOWNAttack.png"));
+            // attacktexture = new Texture(Gdx.files.internal("DOWNAttack.png"));
         } else if (direction == Direction.LEFT) {
             attackRectangle = new Rectangle(charRect.x - this.weapon.reach, charRect.y, this.weapon.reach, charRect.height);
-            attacktexture = new Texture(Gdx.files.internal("LEFTAttack.png"));
+            //  attacktexture = new Texture(Gdx.files.internal("LEFTAttack.png"));
         } else {//right
             attackRectangle = new Rectangle(charRect.x + charRect.width, charRect.y, this.weapon.reach, charRect.height);
-            attacktexture = new Texture(Gdx.files.internal("RightAttack.png"));
+            // attacktexture = new Texture(Gdx.files.internal("RightAttack.png"));
         }
-        game.batch.begin();
-        game.batch.draw(attacktexture, attackRectangle.x, attackRectangle.y);
-        game.batch.end();
         //attackrectangle is set
         for (Entity e : entities) {
             if (e instanceof AliveThing && attackRectangle.overlaps(e.sprite.getBoundingRectangle())) {
@@ -179,6 +202,9 @@ public class PlayerCharacter extends AliveThing {
             }
 
         }
-        ;
+
     }
+
+
+
 }

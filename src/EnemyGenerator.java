@@ -36,11 +36,15 @@ public class EnemyGenerator {
         int rand = (int) (Math.random() * 100);//random value from 0-99 for generation fo a random enemy in the difficulty value
         switch (dificulty) {
             case 1:
-                return new Zombie(vect, x, y, new Texture(Gdx.files.internal("zombie.png")));
+                return new Zombie(vect, x, y, new Texture(Gdx.files.internal("Zach/zombie/zombie facing right.png")));
             case 2:
                 return new Skeleton(vect, x, y, new Texture(Gdx.files.internal("Skeleton.png")));
             case 3:
                 return new Zombear(vect, x, y, new Texture(Gdx.files.internal("Zombear.png")));
+            case 4:
+                return new BigSlime(vect, x, x, new Texture(Gdx.files.internal("bigSlime.png"))
+                        , new Texture(Gdx.files.internal("rageSlime.png")),
+                        new Texture(Gdx.files.internal("smallSlime.png")));
             default:
                 return new Zombie(vect, x, y, new Texture(Gdx.files.internal("FlabioFinal")));
         }

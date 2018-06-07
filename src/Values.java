@@ -10,7 +10,7 @@ public class Values {
 
     public static final float MENU_CIRCLE_RADIUS = 150f;
 
-    public static final int MAX_DIFFICULTY = 3;
+    public static final int MAX_DIFFICULTY = 4;
 
 
 

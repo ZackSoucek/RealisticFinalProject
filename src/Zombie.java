@@ -14,7 +14,7 @@ public class Zombie extends Enemy {
                 20,
                 20,
                 0,
-                new Weapon("Zombie Fists", 2, 1, 0.75),
+                new Weapon("Zombie Fists", 25, 1, 0.75),
                 1,
                 20f);
         this.sprite.setX(x);

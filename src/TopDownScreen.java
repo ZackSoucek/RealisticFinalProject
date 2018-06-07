@@ -4,6 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -19,6 +20,8 @@ public class TopDownScreen implements Screen {
     private int score;
     private boolean levelWon;
     private boolean EXPGiven;
+    private Texture floorTexture;
+    private Texture hitsplash;
 
     private OrthographicCamera camera;
     private FitViewport viewport;
@@ -38,10 +41,13 @@ public class TopDownScreen implements Screen {
         viewport = new FitViewport(Values.WORLD_WIDTH, Values.WORLD_HEIGHT, camera);
         score = 0;
         game.batch.begin();
+        floorTexture = new Texture(Gdx.files.internal("dirt.png"));
+        hitsplash = new Texture(Gdx.files.internal("bloodspash.png"));
+
         entities.addAll(EnemyGenerator.generate(game.getLevel(),
-                Values.WORLD_WIDTH / 10,
+                Values.WORLD_WIDTH / 3,
                 Values.WORLD_WIDTH - Values.WORLD_WIDTH / 10,
-                Values.WORLD_HEIGHT / 10,
+                Values.WORLD_HEIGHT / 3,
                 Values.WORLD_HEIGHT - Values.WORLD_HEIGHT / 10));
 
 
@@ -54,13 +60,21 @@ public class TopDownScreen implements Screen {
 
     private void draw() {
         game.playerCharacter.sprite.draw(game.batch);
+        game.batch.end();
+        renderer.begin(ShapeRenderer.ShapeType.Line);
+        Rectangle rect = game.playerCharacter.getHitbox();
+        renderer.rect(rect.x,rect.y,rect.width,rect.height);
+        renderer.end();
+        game.batch.begin();
+
+
         for (Entity e : entities) {//draw all entities
             e.sprite.draw(game.batch);
         }
     }
 
     private void gameOver() {
-        game.setScreen(new GameOverScreen(game));
+        //game.setScreen(new GameOverScreen(game));
     }
 
     public void doCollisionsWithPlayer() {
@@ -68,6 +82,10 @@ public class TopDownScreen implements Screen {
             if (game.playerCharacter.isTouching(e)) {//if they are colliding with the player
                 e.collidePlayer(game.playerCharacter);//do what they do when the collide with the player\
                 //the entities need the player character so they know what player character to hit
+                //FLash Screen Red sligtly when you get hit.
+                game.batch.begin();
+                game.batch.draw(hitsplash,0,0);
+                game.batch.end();
             }
         }
         if (game.playerCharacter.isDead()) {
@@ -115,6 +133,10 @@ public class TopDownScreen implements Screen {
         viewport.apply();
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //draw the floor
+        game.batch.begin();
+        game.batch.draw(floorTexture,0,0);
+        game.batch.end();
         doCollisionsWithPlayer();
         doThink(delta);
 
