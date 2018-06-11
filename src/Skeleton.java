@@ -2,6 +2,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -19,9 +20,14 @@ public class Skeleton extends Enemy {
                 0,
                 new Weapon("Bone splinters", 20, 1, 0.75),
                 2,
-                5f);
+                30f);
         this.sprite.setX(x);
         this.sprite.setY(y);
+        this. hitbox = new Polygon(new float[]{sprite.getX(), sprite.getY(),
+                sprite.getX(), sprite.getY() + sprite.getHeight(),
+                sprite.getX() + sprite.getHeight(), sprite.getY() + sprite.getHeight(),
+                sprite.getX() + sprite.getWidth(), sprite.getY()});
+        hitbox.setOrigin(sprite.getX()+ sprite.getWidth()/2, sprite.getY() + sprite.getHeight()/2);
         lastThrowTime = TimeUtils.millis();
     }
 
@@ -32,6 +38,9 @@ public class Skeleton extends Enemy {
         this.vector.setLength(this.getMoveSpeed());
         this.sprite.setRotation(90 - 180f / (float) Math.PI * (float) (Math.atan2(this.vector.x, this.vector.y)));
         this.sprite.translate(delta * this.vector.x,
+                delta * this.vector.y);
+        this.hitbox.setRotation(90 - 180f / (float) Math.PI * (float) (Math.atan2(this.vector.x, this.vector.y)));
+        this.hitbox.translate(delta * this.vector.x,
                 delta * this.vector.y);
         //Movement^^^
         //attack\/
@@ -48,10 +57,10 @@ public class Skeleton extends Enemy {
         float dx = game.playerCharacter.sprite.getX() - this.sprite.getX();
         float dy = game.playerCharacter.sprite.getY() - this.sprite.getY();
         Vector2 vector2 = new Vector2(dx, dy);
-        vector2.setLength2(10000);
+        vector2.setLength(350);
 
 
-        ((TopDownScreen) game.getScreen()).addEntity(new Bone(new Texture(Gdx.files.internal("Bone.png")),
+        ((TopDownScreen) game.getScreen()).addEntity(new Bone(new Texture(Gdx.files.internal("bone.png")),
                 vector2,
                 this.sprite.getX() + this.sprite.getWidth() / 2,
                 this.sprite.getY() + this.sprite.getHeight() / 2

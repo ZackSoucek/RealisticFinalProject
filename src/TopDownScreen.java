@@ -1,12 +1,15 @@
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import sun.awt.SunHints;
@@ -56,25 +59,37 @@ public class TopDownScreen implements Screen {
 
         game.batch.end();
 
+
+
     }
 
     private void draw() {
         game.playerCharacter.sprite.draw(game.batch);
         game.batch.end();
-        renderer.begin(ShapeRenderer.ShapeType.Line);
-        Rectangle rect = game.playerCharacter.getHitbox();
-        renderer.rect(rect.x,rect.y,rect.width,rect.height);
-        renderer.end();
+//        renderer.begin(ShapeRenderer.ShapeType.Line);
+//        float[] points = game.playerCharacter.getHitbox().getTransformedVertices();
+//        renderer.polygon(points);
+//        renderer.end();
         game.batch.begin();
 
 
         for (Entity e : entities) {//draw all entities
             e.sprite.draw(game.batch);
+            game.batch.end();
+//            renderer.begin(ShapeRenderer.ShapeType.Line);
+//
+//
+//            renderer.polygon(e.hitbox.getTransformedVertices());
+//
+//
+//            renderer.end();
+            game.batch.begin();
+
         }
     }
 
     private void gameOver() {
-        //game.setScreen(new GameOverScreen(game));
+        game.setScreen(new GameOverScreen(game));
     }
 
     public void doCollisionsWithPlayer() {
@@ -84,7 +99,7 @@ public class TopDownScreen implements Screen {
                 //the entities need the player character so they know what player character to hit
                 //FLash Screen Red sligtly when you get hit.
                 game.batch.begin();
-                game.batch.draw(hitsplash,0,0);
+                game.batch.draw(hitsplash, 0, 0);
                 game.batch.end();
             }
         }
@@ -135,7 +150,7 @@ public class TopDownScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //draw the floor
         game.batch.begin();
-        game.batch.draw(floorTexture,0,0);
+        game.batch.draw(floorTexture, 0, 0);
         game.batch.end();
         doCollisionsWithPlayer();
         doThink(delta);
@@ -161,12 +176,19 @@ public class TopDownScreen implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {//start next level
                 winLevel();
                 entities.addAll(EnemyGenerator.generate(game.getLevel(),
-                        Values.WORLD_WIDTH / 10,
+                        Values.WORLD_WIDTH / 3,
                         Values.WORLD_WIDTH - Values.WORLD_WIDTH / 10,
-                        Values.WORLD_HEIGHT / 10,
+                        Values.WORLD_HEIGHT / 3,
                         Values.WORLD_HEIGHT - Values.WORLD_HEIGHT / 10));
                 levelWon = false;
                 game.playerCharacter.sprite.setPosition(0, 0);
+                Sprite sprite = game.playerCharacter.sprite;
+                game.playerCharacter.hitbox = new Polygon(new float[]{47f, 128 - 82f,
+                        47f, 128 - 48f,
+                        47 + 35f, 128 - 48f,
+                        47 + 35f, 128 - 82f});
+                game.playerCharacter.hitbox.scale(2);
+                game.playerCharacter.hitbox.setOrigin(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
             }
 
         }

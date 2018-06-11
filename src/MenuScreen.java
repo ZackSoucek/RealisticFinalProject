@@ -2,6 +2,7 @@
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -26,6 +27,9 @@ public class MenuScreen implements Screen {
     int rsign;
     int bsign;
     int gsign;
+    Texture chartext;
+    Texture enemytext;
+
 
     public MenuScreen(BattleGame game) {
         this.red = 0;
@@ -35,6 +39,10 @@ public class MenuScreen implements Screen {
         rsign = 1;
         bsign = 1;
         gsign = 1;
+        chartext = new Texture(Gdx.files.internal("FlabioFinal.png"));
+        enemytext = new Texture(Gdx.files.internal("zombie.png"));
+
+
     }
 
 
@@ -53,6 +61,7 @@ public class MenuScreen implements Screen {
         viewport.apply();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 
         renderer.setProjectionMatrix(camera.combined);
         renderer.begin(ShapeType.Filled);
@@ -103,6 +112,11 @@ public class MenuScreen implements Screen {
         font.draw(batch, titleText,
                 Values.WORLD_WIDTH / 2 - layout.width / 2,
                 Values.WORLD_HEIGHT / 2 + layout.height / 2);
+        String instructionText = "Press arrow keys or WASD to move.\nPress space to attack";
+        GlyphLayout instructLayout = new GlyphLayout(font, instructionText);
+        font.draw(batch, instructionText,
+                Values.WORLD_WIDTH / 2 - instructLayout.width / 2,
+                Values.WORLD_HEIGHT / 5 + instructLayout.height / 2);
         batch.end();
         if (over) {
             if (Gdx.input.justTouched()) {

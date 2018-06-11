@@ -1,5 +1,6 @@
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,14 +14,15 @@ public class BattleGame extends Game {
     private int level;//keeps track of what level we are on
     // if level 0, show main menu
     // used to calculate enemies and whether boss(level%10==0)
+    private Preferences prefs;
 
 
     public int getLevel() {
         return level;
     }
 
-    public BattleGame(int highScore) {
-        this.highScore = highScore;
+    public BattleGame() {
+
     }
 
     @Override
@@ -30,7 +32,16 @@ public class BattleGame extends Game {
         playerCharacter = new PlayerCharacter(new Texture(Gdx.files.internal("SWING/Swing Top0000.png")));
         score = 0;
         level = 0;
+
+        prefs = Gdx.app.getPreferences("High Score Folder");
+        if (!prefs.contains("highscore")) {
+            prefs.putInteger("highscore", 0);
+        }
+        prefs.flush();
+        this.highScore = prefs.getInteger("highscore");
         this.setScreen(new MenuScreen(this));
+
+
     }
 
     @Override
@@ -68,8 +79,11 @@ public class BattleGame extends Game {
         for (int l = playerCharacter.getLevel(); l > 0; l--) {
             score += playerCharacter.EXP_PER_LEVEL * l;
         }
-        if(score> highScore)
+        if (score > highScore) {
             highScore = score;
+            prefs.putInteger("highscore", highScore);
+            prefs.flush();
+        }
     }
 
 
@@ -80,8 +94,6 @@ public class BattleGame extends Game {
     public void winLevel() {
         playerCharacter.addXP(level);
         level++;
-        playerCharacter.health = playerCharacter.healthTotal;
-
     }
 
 }
